@@ -49,30 +49,38 @@ export const uploadResume = (file) => async (dispatch, getState) => {
 
 
         const { data } = response;
-        const parsed = data.data ;
+        const parsed = data.data;
 
         // update user slice with parsed fields (name/email/phone) and visibility
         dispatch(setFromParsedData(parsed));
 
-        
-
-        
 
 
-        try {
-            await dispatch(addUserInfo(parsed.name, parsed.email, parsed.phone));
-            // console.log("User info saved in MongoDB");
-        } catch (err) {
-            console.error("Failed to save user info:", err.message);
-            throw err;
+
+
+
+        const { name, email, phone } = parsed;
+
+        // only make request if all fields are present and not empty
+        if (name && email && phone) {
+            try {
+                await dispatch(addUserInfo(name, email, phone));
+                // console.log("User info saved in MongoDB");
+            } catch (err) {
+                console.error("Failed to save user info:", err.message);
+                throw err;
+            }
+        } else {
+            console.warn("Missing required fields, request not sent:", { name, email, phone });
         }
+
 
         const questions = data.interviewQuestions.questions || [];
         // console.log("Questions in thunk:", questions);
         dispatch(setInterviewQuestions(questions));
         // console.log(getState().resume.interviewQuestions)
 
-        
+
 
         dispatch(setLoading('Done'));
 
@@ -89,7 +97,7 @@ export const uploadResume = (file) => async (dispatch, getState) => {
         return response;
     } catch (err) {
         dispatch(setLoading(''));
-        throw err.response?.data?.error || err.message  ||err||"Upload failed";
+        throw err.response?.data?.error || err.message || err || "Upload failed";
     }
 };
 
@@ -108,9 +116,9 @@ export const addUserInfo = (name, email, phone) => async (dispatch) => {
         return user;
     } catch (err) {
         console.error("Add user info error:", err);
-        
+
         const errorMessage = err.response?.data?.error || err.response?.data?.message || err.message || "Failed to save user info";
-        
+
         throw errorMessage;
     }
 };

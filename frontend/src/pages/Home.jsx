@@ -5,6 +5,7 @@ import { uploadResume } from '../store/slices/resumeSlice';
 import { setName, setEmail, setPhone, setVisibleField } from '../store/slices/userSlice';
 import { setUserInfoPanel, setUserChatPanel } from '../store/slices/uiSlice';
 import { addMessage, setInput, setInterviewIndex, setTimer } from '../store/slices/chatSlice';
+import { addUserInfo } from '../store/slices/resumeSlice';
 import { useGSAP } from '@gsap/react';
 import { store } from '../store/store';
 import gsap from 'gsap';
@@ -93,7 +94,7 @@ const Home = () => {
 
 
 
-    const validateAndOpenChat = (e) => {
+    const validateAndOpenChat = async(e) => {
         e?.preventDefault?.();
         // Validate using values from Redux
         if (!name.trim()) {
@@ -108,15 +109,25 @@ const Home = () => {
             showNotification("Phone must be 10 digits", "error");
             return;
         }
+        
 
         // set visible fields to false 
         dispatch(setVisibleField({ field: 'name', value: false }));
         dispatch(setVisibleField({ field: 'email', value: false }));
         dispatch(setVisibleField({ field: 'phone', value: false }));
 
+        console.log(phone,",",email,",",name);
+        try {
+            await dispatch(addUserInfo(name, email, phone));
+        } catch (err) {
+            console.error("Failed to save user info:", err.message);
+            throw err;
+        }
+
         // close info panel and open chat
         dispatch(setUserInfoPanel(false));
         dispatch(setUserChatPanel(true));
+
     };
 
 
@@ -133,7 +144,7 @@ const Home = () => {
 
         if (time <= 0) {
             dispatch(setTimer(0));
-            return; 
+            return;
         }
 
         dispatch(setTimer(time));
@@ -238,6 +249,7 @@ const Home = () => {
                 />
             </div>
 
+            
             <div ref={userInfoRef} className='bg-gray-700 fixed bottom-0 text-white p-3 h-auto w-auto rounded-3xl'>
                 <UserInformation
                     visible={visible}
