@@ -12,7 +12,7 @@ const UserInformation = (props) => {
                 <div className='flex flex-col gap-3 w-full p-2 rounded-2xl bg-gray-800'>
                     {props.visible.name &&
                         <input
-                            className="block w-full border border-black p-2 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-green-500"
+                            className="block w-full border border-black p-2 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                             type="text"
                             placeholder="Enter your name"
                             value={props.name}
@@ -21,7 +21,7 @@ const UserInformation = (props) => {
                     }
                     {props.visible.email &&
                         <input
-                            className="block w-full border border-black p-2 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-green-500"
+                            className="block w-full border border-black p-2 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                             type="text"
                             placeholder="Enter your email address"
                             value={props.email}
@@ -29,7 +29,7 @@ const UserInformation = (props) => {
                         />}
                     {props.visible.phone &&
                         <input
-                            className="block w-full border border-black p-2 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-green-500"
+                            className="block w-full border border-black p-2 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                             type="text"
                             placeholder="Enter your phone number"
                             value={props.phone}

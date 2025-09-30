@@ -203,28 +203,33 @@ Return ONLY the list of 6 questions in strict JSON format like this:
 
 module.exports.addUserInfo = async (req, res, next) => {
     try {
-        const { name, email, phone } = req.body;
-        if (!name || !email || !phone) {
-            return res.status(400).json({ error: "Fields are required" });
-        }
+        // Use empty string if any field is missing or null
+        const name = req.body.name || "";
+        const email = req.body.email || "";
+        const phone = req.body.phone || "";
+
         const isUserAlready = await userModel.findOne({ email });
 
         if (isUserAlready) {
-            return res.status(400).json({ message: 'User already exist' });
+            return res.status(400).json({ message: 'User already exists' });
         }
-        const user = userModel.create({
+
+        const user = await userModel.create({
             name,
             email,
             phone,
             interviewQues: [],
             interviewAns: [],
             interviewSummary: ""
-        })
+        });
+
         res.status(200).json({ message: "User info saved", user });
     }
     catch (err) {
+        console.error(err);
         res.status(500).json({ error: "Failed to save user info" });
     }
+
 };
 
 

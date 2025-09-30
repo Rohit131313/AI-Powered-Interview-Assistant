@@ -49,10 +49,12 @@ export const uploadResume = (file) => async (dispatch, getState) => {
 
 
         const { data } = response;
-        const parsed = data.data ;    
+        const parsed = data.data ;
 
         // update user slice with parsed fields (name/email/phone) and visibility
         dispatch(setFromParsedData(parsed));
+
+        
 
         
 
